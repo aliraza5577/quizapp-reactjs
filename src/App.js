@@ -42,15 +42,25 @@ function App() {
 		},
 	]
 	const [currentIndex, setCurrentIndex] = useState(0)
+	const [quizFinished, setQuizFinished] = useState(false)
+	const [score, setScore] = useState(0)
 
-	function handleAnswerClick(){
-		setCurrentIndex(currentIndex + 1)
+	function handleAnswerClick(isCorrect){
+		if(isCorrect) {
+            setScore((score) => score + 1);
+        }
+
+		if(currentIndex + 1 == questions.length){
+			setQuizFinished(true)
+		} else {
+			setCurrentIndex((value) => value + 1)
+		}
 	}
 
 	return <div className="app">
-            {false ? (
+            {quizFinished ? (
               <div className="score-section">
-                You scored 1 out of {questions.length}
+                You scored {score} out of {questions.length}
               </div>
             ) : (
               <>
@@ -65,7 +75,9 @@ function App() {
                 </div>
                 <div className="answer-section">
 				{questions[currentIndex].answerOptions.map((answer) =>
-                        <button onClick={handleAnswerClick} >{answer.answerText}</button>
+					<button onClick={() => handleAnswerClick(answer.isCorrect)} key={answer.answerText}>
+						{answer.answerText}
+					</button>
                     )}
                 </div>
               </>
